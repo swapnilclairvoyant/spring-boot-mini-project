@@ -2,6 +2,8 @@ package com.clairvoyant.mvc.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,31 +23,28 @@ import com.clairvoyant.mvc.utility.CustomErrorType;
 @RestController
 @RequestMapping(value="/api")
 public class UserController {
+	private static final Logger logger = LogManager.getLogger(UserController.class);
+
+	
 	@Autowired
 	UserService userService;
 	
 	@GetMapping("/users")
 	public List<User> showAllUsers() {
-		System.out.println("Inside showAllUsers");
+		logger.debug("Inside showAllUsers");
 		return userService.getAllUser();
 	}
 	
 	@PostMapping("/users")
 	public Object addUser(@RequestBody User user) {
-		System.out.println("Inside addUser");
-		if(userService.isUserExists(user)) {
-			return new CustomErrorType("Unable to create. A Country with name "+user.getFirstName()+" "+user.getLastName()+" already exist.");
-		}
-		userService.addUser(user);
-		return "";
+		logger.debug("Inside addUser");
+		return userService.addUser(user);
 	}
 	
 	@PutMapping("/users/{id}") 
 	public Object updateUser(@PathVariable("id") Long id, @RequestBody User user) {
 		User currentUser = userService.findById(id);
-		if(currentUser == null) {
-			return new CustomErrorType("Unable to upate. User with id " + id + " not found.");
-		}
+		
 		currentUser.setFirstName(user.getFirstName());
 		currentUser.setLastName(user.getLastName());
 		currentUser.setPhoneNo(user.getPhoneNo());
@@ -57,9 +56,6 @@ public class UserController {
 	@DeleteMapping("users/{id}")
 	public Object deleteUser(@PathVariable("id") Long id) {
 		User user = userService.findById(id);
-		if(user==null) {
-			return new CustomErrorType("Unable to delete. User with id " + id + " not found.");
-		}
 		
 		userService.deleteUserById(id);
 		return "";
