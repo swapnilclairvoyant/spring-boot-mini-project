@@ -13,7 +13,9 @@ public class AppController {
 	@RequestMapping("/")
 	String home(ModelMap modal) {
 		System.out.println("CRUD example");
+
 		//Adding new comment
+		// Creating conflict to understand how to remove conflict
 		modal.addAttribute("title","CRUD Example");
 		return "index";
 	}
