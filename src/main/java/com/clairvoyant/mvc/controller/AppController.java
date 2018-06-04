@@ -13,6 +13,7 @@ public class AppController {
 	@RequestMapping("/")
 	String home(ModelMap modal) {
 		System.out.println("CRUD example");
+		//Adding new comment
 		modal.addAttribute("title","CRUD Example");
 		return "index";
 	}
